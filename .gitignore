@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Django
+*.log
+*.pot
+*.pyc
+*.db
+media/
+staticfiles/
+
+# Virtualenv
+venv/
+.env
+*.env
+
+# Node
+node_modules/
+dist/
+.build/
+
+# Google API tokens
+token.pickle
+token.json
+credentials.json
+
+# System
+.DS_Store
+Thumbs.db

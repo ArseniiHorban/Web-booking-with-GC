@@ -1,0 +1,51 @@
+    {% load static %}
+ <div class="max-w-3xl mx-auto mt-24 p-8 bg-white/90 rounded-xl shadow-2xl text-center">
+    <h1 class="text-4xl font-extrabold mb-4 text-gray-800">Booking System Demo</h1>
+    <p class="text-lg text-gray-700 mb-6">
+        This project is a web application for booking.  It demonstrates a robust, scalable architecture with its own and <span class="font-semibold text-green-700"> Google Calendar </span> databases with one-way synchronization, background task processing, and a clean, responsive UI.
+    </p>
+    <div class="text-left mx-auto max-w-2xl">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">Key Features:</h2>
+        <ul class="list-disc pl-6 text-gray-700 space-y-2 mb-6">
+            <li><span class="font-semibold text-blue-700">Django</span> backend with modular project structure</li>
+
+            <li>Booking form with real-time slot validation and user-friendly interface</li>
+
+            <li>Automatic event creation in the administrator’s <span class="font-semibold text-green-700">Google Calendar</span></li>
+
+            <li>Events can be created, edited or deleted in Google Calendar, all changes are synched with the local database</li>
+
+            <li>Asynchronous background processing using <span class="font-semibold text-blue-800">Celery</span> and <span class="font-semibold text-red-700">Redis</span> (calendar's sync)</li>
+
+            <li>All bookings in Google Calendar have specific colour, so that the administrator can create bookings not related to the program in the same calendar </li>
+
+            <li>Ready for deployment and further extension</li>
+        </ul>
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">How it works:</h2>
+        <ol class="list-decimal pl-6 text-gray-700 space-y-1 mb-6">
+            <li>The user selects a date and time for a booking and submits the booking form.</li>
+            <li>The system checks slot availability and creates a booking record in the database and Google Calendar.</li>
+            <li class="text-green-800">All bookings are visible to the admin in both the web interface and Google Calendar.</li>
+        </ol>
+
+        <h2 class="text-xl mb-2 text-gray-800">Or, the other way:</h2>
+        <ol class="list-decimal pl-6 text-gray-700 space-y-1 mb-6">
+            <li>The admin creates a booking in Google Calendar setting the event color to yellow</li>
+            <li>Once in 5 minutes system checks for any changes in Google Calendar and updates the local database accordingly.</li>
+            <li class="text-green-800">All bookings are visible to the admin in both the web interface and Google Calendar.</li>
+        </ol>
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">Tech Stack:</h2>
+        <div class="flex flex-wrap gap-3 mb-4 mt-4">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">Django</span>
+            <span class="bg-red-200 text-black px-3 py-1 rounded-full font-semibold">PostgreSQL</span>
+            <span class="bg-purple-200 text-purple-800 px-3 py-1 rounded-full font-semibold">TailwindCSS</span>
+            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">Celery</span>
+            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">Redis</span>
+            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-semibold">Google Calendar API</span>
+        </div>
+    </div>
+        <p class="text-gray-500 mt-8 text-sm">
+        This demo was made as a pet project to showcase my skills in Django and web development, and further understand the integration of listed above technologies.
+        It is not intended for production use at the moment, but can be a good starting point for building a more complex booking system and integrating it into a production-ready project.
+    </p>
+</div>

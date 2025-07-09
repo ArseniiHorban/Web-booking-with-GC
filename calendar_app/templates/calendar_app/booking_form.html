@@ -1,0 +1,171 @@
+{% load static %}
+<!-- Load Tailwind CSS compiled file -->
+<link rel="stylesheet" href="{% static 'css/output.css' %}">
+
+<!-- Booking form -->
+<form method="post" action="{% url 'create_booking' %}" class="max-w-lg mx-auto mt-12 p-8 bg-white rounded-xl shadow-2xl space-y-6">
+    {% csrf_token %}
+
+    <!-- Input fields: name and phone -->
+    <div class="flex gap-4">
+        <div class="w-1/2">
+            <!-- Name input -->
+            <input
+                type="text"
+                name="name"
+                id="id_name"
+                placeholder="Your name"
+                class="w-full px-4 py-2 border-2 border-blue-500 rounded-md focus:outline-none focus:ring-1
+                focus:ring-blue-700 hover:border-blue-800 transition duration-300"
+                {% if form.name.errors %}<span id="name-error" class="text-red-600">{{ form.name.errors }}</span>{% endif %}
+                required
+                value="{{ form.name.value|default_if_none:'' }}"
+            >
+        </div>
+        <div class="w-1/2">
+            <!-- Phone input -->
+            <input
+                type="text"
+                name="phone"
+                id="id_phone"
+                placeholder="Your phone"
+                class="w-full px-4 py-2 border-2 border-blue-500 rounded-md focus:outline-none focus:ring-1
+                focus:ring-blue-700 hover:border-blue-800 transition duration-300"
+                {% if form.phone.errors %}<span id="phone-error" class="text-red-600">{{ form.phone.errors }}</span>{% endif %}
+                required
+                value="{{ form.phone.value|default_if_none:'' }}"
+            >
+        </div>
+    </div>
+
+    <!-- Date selection input -->
+    <div class="mb-4 text-center">
+        <label for="datepicker" class="block mb-2 font-semibold">Select date:</label>
+        <input
+            id="datepicker"
+            name="date"
+            type="date"
+            class="w-full px-4 py-2 border-2 border-blue-500 rounded-md focus:outline-none focus:ring-1
+            focus:ring-blue-700 hover:border-blue-800 transition duration-300"
+            placeholder="Select date"
+            autocomplete="off"
+            required
+        >
+    </div>
+
+    <!-- Interval options (shown after date selection) -->
+    <div id="intervals-section" class="mt-4 hidden text-center">
+        <label class="block mb-2 font-semibold">Available intervals</label>
+        <div id="intervals-grid" class="grid grid-cols-2 gap-2 mt-2"></div>
+    </div>
+
+    <!-- Time slot options (shown after interval selection) -->
+    <div id="time-slots" class="mt-4 hidden text-center">
+        <label class="block mb-2 font-semibold">Select time:</label>
+        <div id="time-grid" class="grid grid-cols-4 gap-2 mt-2"></div>
+    </div>
+
+    <!-- Hidden inputs used for submitting selected date and time -->
+    <input type="hidden" name="date" id="id_date">
+    <input type="hidden" name="time" id="id_time">
+
+    <!-- Submit button centered -->
+    <div class="flex justify-center ">
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition w-60">
+            Book
+        </button>
+    </div>
+</form>
+
+<!-- Script to handle date, interval, and time selection logic -->
+<script>
+    // Server-provided dictionary of available time slots by date
+    const slots = {{ slots|safe }};
+
+    // Grabbing all necessary DOM elements
+    const intervalsGrid = document.getElementById('intervals-grid');
+    const intervalsSection = document.getElementById('intervals-section');
+    const timeGrid = document.getElementById('time-grid');
+    const timeSlotsDiv = document.getElementById('time-slots');
+    const inputDate = document.getElementById('id_date');
+    const inputTime = document.getElementById('id_time');
+    const datepickerInput = document.getElementById('datepicker');
+
+    // Handle date selection
+    datepickerInput.addEventListener('change', function(e) {
+        const selectedDate = e.target.value;
+        inputDate.value = selectedDate;
+
+        // Clear existing UI
+        intervalsGrid.innerHTML = '';
+        timeGrid.innerHTML = '';
+        timeSlotsDiv.classList.add('hidden');
+
+        // Get intervals for selected date
+        const intervals = slots[selectedDate] || [];
+
+        // Render interval buttons
+        intervals.forEach(interval => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'interval-button px-3 py-1 rounded w-full px-4 py-2 border-2 border-gray-700 rounded-md hover:border-blue-500 transition duration-300"';
+            btn.textContent = `${interval.start} – ${interval.end}`;
+            btn.dataset.start = interval.start;
+            btn.dataset.end = interval.end;
+
+            // Interval click: highlight and generate time slots
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.interval-button').forEach(b => b.classList.remove('text-white'));
+                btn.classList.add('bg-blue-500', 'text-white');
+                generateTimeOptions(interval.start, interval.end);
+            });
+
+            intervalsGrid.appendChild(btn);
+        });
+
+        // Show/hide interval section
+        if (intervals.length > 0) {
+            intervalsSection.classList.remove('hidden');
+        } else {
+            intervalsSection.classList.add('hidden');
+        }
+    });
+
+    // Generate clickable time buttons between start and end interval
+    function generateTimeOptions(startStr, endStr) {
+        const [startHour, startMin] = startStr.split(':').map(Number);
+        const [endHour, endMin] = endStr.split(':').map(Number);
+
+        const start = new Date();
+        start.setHours(startHour, startMin, 0, 0);
+        const end = new Date();
+        end.setHours(endHour, endMin, 0, 0);
+
+        timeGrid.innerHTML = '';
+        timeSlotsDiv.classList.remove('hidden');
+
+        // Generate time buttons every 10 minutes
+        while (start.getTime() + 90 * 60 * 1000 <= end.getTime()) {
+            const hours = String(start.getHours()).padStart(2, '0');
+            const minutes = String(start.getMinutes()).padStart(2, '0');
+            const timeStr = `${hours}:${minutes}`;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'time-button px-3 py-1 rounded border border-gray-700 rounded-md hover:border-blue-500 hover:bg-blue-50 transition duration-300';
+            btn.textContent = timeStr;
+
+            // Time button click: mark selected and store in hidden input
+            btn.addEventListener('click', () => {
+                inputTime.value = timeStr;
+                document.querySelectorAll('.time-button').forEach(b => b.classList.remove('bg-blue-500', 'text-white'));
+                btn.classList.add('bg-blue-500', 'text-white');
+            });
+
+            timeGrid.appendChild(btn);
+
+            // Increment by 10 minutes
+            start.setMinutes(start.getMinutes() + 10);
+        }
+    }
+</script>

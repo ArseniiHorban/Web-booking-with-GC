@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Demo Booking{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">     <!-- AOS  -->
+</head>
+<!--Header-->
+<header class="fixed w-full"  data-aos="fade-down" data-aos-duration="1200">
+    <div class="absolute inset-0 pointer-events-none z-[-1] bg-gradient-to-b from-black/50 via-black/20 to-transparent"></div> <!-- Gradient background -->
+    <nav class="container mx-auto flex justify-between items-center py-8"> <!--navbar-->
+        <div class="absolute left-1/2 transform -translate-x-1/2 flex space-x-8 text-gray-800 font-semibold mb-1">
+            <a href="{% url 'create_booking' %}" class="
+            block px-4 py-2
+            rounded-full 
+            hover:from-blue-500 hover:to-gray-800 
+            hover:text-white 
+            bg-gradient-to-r from-gray-100 to-gray-200
+            transition-all duration-300
+            ">Create Booking</a>
+        </div>
+    </nav>
+</header>
+
+<body class="bg-gray-50 text-gray-800">
+    <!-- Content block with margin -->
+    <div class="pt-20 min-h-screen">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center bg-gradient-to-r from-blue-100 via-purple-100 to-pink-200 py-8 mt-12 text-black shadow-inner">
+        <div class="container mx-auto flex flex-col items-center gap-2">
+            <div class="flex gap-4 mb-2">
+                <a href="mailto:horbanarsenii@gmail.com" class="hover:text-blue-600 transition-colors duration-200">
+                    <i class="fa fa-envelope mr-1"></i> Contact
+                </a>
+                <a href="https://github.com/ArseniiHorban" target="_blank" class="hover:text-blue-600 transition-colors duration-200">
+                    <i class="fa fa-github mr-1"></i> GitHub
+                </a>
+            </div>
+            <div class="text-sm opacity-80">
+                Booking Demo &mdash; Made using Django, Celery, Redis, and Google Calendar API.
+            </div>
+            <div class="text-xs mt-1 opacity-60">
+                This is a demo project for educational and portfolio purposes.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Connect AOS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+</html>

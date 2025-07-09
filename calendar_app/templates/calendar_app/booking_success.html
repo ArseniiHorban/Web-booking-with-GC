@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center py-10">
+    <h2 class="text-3xl font-bold text-blue-500">Your booking has been successfully created!</h2>
+    <p class="text-gray-700 mt-4">We will contact you shortly.</p>
+    <p class="text-gray-500 text-sm"> as long as it's a demo application - no :) </p>
+</div>
+        <div class="absolute left-1/2 transform -translate-x-1/2 flex space-x-8 text-gray-800 font-semibold mb-1">
+            <a href="{% url 'index' %}" class="
+            block px-4 py-2
+            rounded-full 
+            hover:from-blue-500 hover:to-gray-800 
+            hover:text-white 
+            bg-gradient-to-r from-gray-100 to-gray-200
+            transition-all duration-300
+            ">Go to Home Page</a>
+        </div>
+{% endblock %}
